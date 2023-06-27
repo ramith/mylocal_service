@@ -7,11 +7,6 @@ metadata:
     app_name: mylocalservice
   name: mylocalservice
 spec:
-  volumes:
-  - name: mylocalservice-env
-    configMap:
-      name: mylocalservice-env
-      defaultMode: 420
   replicas: 1
   selector:
     matchLabels:
@@ -22,6 +17,11 @@ spec:
       labels:
         app_name: mylocalservice
     spec:
+      volumes:
+      - name: mylocalservice-env
+        configMap:
+          name: mylocalservice-env
+          defaultMode: 420
       containers:
         - image: mylocalservice.azurecr.io/main
           imagePullPolicy: Always
