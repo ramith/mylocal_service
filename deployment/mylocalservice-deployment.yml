@@ -7,6 +7,11 @@ metadata:
     app_name: mylocalservice
   name: mylocalservice
 spec:
+  volumes:
+  - name: mylocalservice-env
+    configMap:
+      name: mylocalservice-env
+      defaultMode: 420
   replicas: 1
   selector:
     matchLabels:
@@ -32,5 +37,9 @@ spec:
             requests:
               cpu: 500m
               memory: 512Mi
+          volumeMounts:
+          - name: mylocalservice-env
+            mountPath: /mylocal_service/.env
+            subPath: .env
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
