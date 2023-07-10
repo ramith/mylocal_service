@@ -18,3 +18,4 @@ class Table:
     
     def get_table(self):
         return self.get_remote_data
+    

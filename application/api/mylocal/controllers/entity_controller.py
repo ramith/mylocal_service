@@ -1,6 +1,5 @@
 from application.api.mylocal.models.entity import Entity
 from application.api.mylocal.models.ent_type import EntType
-import json
 
 class EntityController:
     def __init__(self, entity_id):

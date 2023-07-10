@@ -62,8 +62,6 @@ class Entity:
     @property
     def get_geo(self):
         geo_data = self.get_topojson_geo_remote_data
-        # n_regions = len(geo_data['objects']['data']['geometries'])
-        # print(n_regions)
         region_to_geo = {}
         for geometry in geo_data['objects']['data']['geometries']:
             coordinates = []
@@ -106,16 +104,10 @@ class Entity:
     def get_entity(self):
         entity = self.get_entity_by_id
         for key, value in entity.items():
-            if '[' in value:
-                entity[key] = eval(value)
-                
             try:
-                entity[key] = int(value)
-            except ValueError:
-                try:
-                    entity[key] = float(value)
-                except ValueError:
-                    pass
+                entity[key] = eval(value)
+            except:
+                pass
         return entity
             
 
@@ -129,7 +121,3 @@ class Entity:
     def get_coordinates(self):
         return self.get_json_geo_remote_data
     
-
-    
-
-

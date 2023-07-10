@@ -21,3 +21,4 @@ class TableController:
                             pass
                 return {row['entity_id']: row}
         return None
+    
