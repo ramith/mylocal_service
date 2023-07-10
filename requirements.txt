@@ -72,3 +72,4 @@ utils-nuuuwan==1.2.7
 waitress==2.1.2
 Werkzeug==2.3.6
 wsproto==1.2.0
+python-dotenv==1.0.0
