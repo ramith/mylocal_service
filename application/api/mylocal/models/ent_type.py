@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 from functools import cached_property
-
 from utils import WWW, FiledVariable
 
 from config import ENTS_BASE_URL
-
 
 @dataclass
 class EntType:
