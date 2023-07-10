@@ -15,7 +15,6 @@ RUN pip install -r requirements.txt
 
 # Copy files to the container
 COPY mylocal_service.py .
-
 COPY config.py .
 COPY application /mylocal_service/application
 # Expose a port for the API to listen on
