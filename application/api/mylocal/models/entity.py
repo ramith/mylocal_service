@@ -1,6 +1,7 @@
 from application.api.mylocal.models.ent_type import EntType
 from application.api.mylocal.models.remote_data import RemoteData
-from shapely.geometry import mapping, Point, shape
+from application.api.mylocal.models.geo_data import GeoData
+from shapely.geometry import shape
 from config import ENTS_BASE_URL
 from config import CENSUS_BASE_URL
 
@@ -49,38 +50,13 @@ class Entity:
             if d['id'] == self.entity_id:
                 return d
         return None
-    
-    @property
-    def get_topojson_geo_remote_data_path(self):
-        ent_type = self.type
-        return f'{ENTS_BASE_URL}/geo/topo-geo_json/{ent_type}.topojson'
-
-    @property
-    def get_topojson_geo_remote_data(self):
-        return RemoteData(self.get_topojson_geo_remote_data_path, type='json').get_data()
-
-    @property
-    def get_geo(self):
-        geo_data = self.get_topojson_geo_remote_data
-        region_to_geo = {}
-        for geometry in geo_data['objects']['data']['geometries']:
-            coordinates = []
-            region_id = geometry['properties']['id']
-
-            for arc in geometry['arcs']:
-                arc = arc.pop().pop()
-                coordinates.append(geo_data['arcs'][arc])
-
-            region_to_geo[region_id] = {'type': 'multipolygon', 'coordinates': [coordinates]}
-        
-        return region_to_geo
 
     @property
     def get_id_by_coordinates(self):
         coordinates = self.coords
         point = shape({'type': 'Point', 'coordinates': [coordinates[1], coordinates[0]]} )
 
-        geo_data = self.get_geo
+        geo_data = GeoData(type=self.type).get_geo_data()
         for id in geo_data:
             geo = geo_data[id]
 
@@ -108,8 +84,7 @@ class Entity:
                 entity[key] = eval(value)
             except:
                 pass
-        return entity
-            
+        return entity  
 
     def get_entity_ids_by_gnd(self):
         data = self.get_gnd_ent_remote_data
