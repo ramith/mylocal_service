@@ -1,5 +1,6 @@
 from application.api.mylocal.models.entity import Entity
 from application.api.mylocal.models.ent_type import EntType
+from application.api.mylocal.models.geo_data import GeoData
 
 class EntityController:
     def __init__(self, entity_id):
@@ -36,4 +37,7 @@ class EntityController:
 
     def get_coordinates(entity_id):
         return {"coordinates": [Entity(entity_id).get_coordinates()], "type":"MultiPolygon"}
+    
+    def get_entity_ids():
+        return GeoData(type = 'gnd').get_entity_ids()
     

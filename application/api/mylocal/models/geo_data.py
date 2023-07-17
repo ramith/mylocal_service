@@ -35,3 +35,8 @@ class GeoData():
         if GeoData.data is None:
             GeoData.data = self.get_geo
         return GeoData.data
+    
+    def get_entity_ids(self):
+        if GeoData.data is None:
+            GeoData.data = self.get_geo
+        return list(GeoData.data.keys())
