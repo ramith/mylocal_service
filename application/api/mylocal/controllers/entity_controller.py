@@ -6,10 +6,12 @@ class EntityController:
     def __init__(self, entity_id):
         self.entity = Entity(entity_id)
 
-    def get_entity(entity_id):
+    @classmethod
+    def get_entity(cls, entity_id):
         return Entity(entity_id).get_entity()
 
-    def get_entities_ids_by_gnd(gnd_id):
+    @classmethod
+    def get_entities_ids_by_gnd(cls, gnd_id):
         gnd_entity = Entity(gnd_id).get_entity_ids_by_gnd()
         return {
             EntType.PROVINCE.name : gnd_entity[f'{EntType.PROVINCE.name}_id'],
@@ -18,26 +20,27 @@ class EntityController:
             EntType.GND.name : gnd_entity[f'{EntType.GND.name}_id']
         }
 
-
-    def get_entity_ids_by_coordinates(coordinates):
+    @classmethod
+    def get_entity_ids_by_coordinates(cls, coordinates):
         lat, _, lng = coordinates.partition(',')
         coordinates = [(float)(lat), (float)(lng)]
 
         gnd_id = Entity(coordinates=coordinates, type='gnd').get_id()
         return EntityController.get_entities_ids_by_gnd(gnd_id)
 
-
-    def get_entities(entity_ids):
+    @classmethod
+    def get_entities(cls, entity_ids):
         entity_ids = entity_ids.split(';')
         entity_map = {}
         for entity_id in entity_ids:
             entity_map[entity_id] = Entity(entity_id).get_entity()
 
         return entity_map
-
-    def get_coordinates(entity_id):
+    @classmethod
+    def get_coordinates(cls, entity_id):
         return {"coordinates": [Entity(entity_id).get_coordinates()], "type":"MultiPolygon"}
     
-    def get_entity_ids():
+    @classmethod
+    def get_entity_ids(cls):
         return GeoData(type = 'gnd').get_entity_ids()
     
