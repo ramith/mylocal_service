@@ -4,4 +4,5 @@ from  application.api.mylocal import mylocal
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(mylocal.bp)
+    mylocal._warmup()
     return app
