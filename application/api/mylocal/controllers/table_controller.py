@@ -1,3 +1,4 @@
+from ast import literal_eval
 from application.api.mylocal.models.table import Table
 
 class TableController:
@@ -11,14 +12,12 @@ class TableController:
         table = self.table.get_table()
         for row in table:
             if row['entity_id'] == row_id:
+                return_row = {}
                 for key, value in row.items():
                     try:
-                        row[key] = int(value)
-                    except ValueError:
-                        try:
-                            row[key] = float(value)
-                        except ValueError:
-                            pass
-                return {row['entity_id']: row}
+                        return_row[key] = literal_eval(value)
+                    except:
+                        return_row[key] = value
+                return {row_id: return_row}
         return None
     
