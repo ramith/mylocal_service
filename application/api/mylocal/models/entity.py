@@ -1,7 +1,10 @@
 from application.api.mylocal.models.ent_type import EntType
 from application.api.mylocal.models.remote_data import RemoteData
 from application.api.mylocal.models.geo_data import GeoData
+from application.api.mylocal.models.cache import Cache
+
 from shapely.geometry import shape
+from ast import literal_eval
 from config import ENTS_BASE_URL
 from config import CENSUS_BASE_URL
 
@@ -56,11 +59,16 @@ class Entity:
         coordinates = self.coords
         point = shape({'type': 'Point', 'coordinates': [coordinates[1], coordinates[0]]} )
 
-        geo_data = GeoData(type=self.type).get_geo_data()
-        for id in geo_data:
-            geo = geo_data[id]
+        processed_geo_data = Cache.get_data_from_cache('processed_geo_data')
 
-            multi_polygon = shape(geo)
+        if processed_geo_data == None:
+            geo_data = {}
+            for id, geo in GeoData(type='gnd').get_geo_data().items():
+                geo_data[id] = shape(geo)
+            Cache.add_data_to_cache('processed_geo_data', geo_data)
+            processed_geo_data = geo_data
+            
+        for id,multi_polygon in processed_geo_data.items():
             if multi_polygon.contains(point):
                 return id
             
@@ -81,9 +89,12 @@ class Entity:
         entity = self.get_entity_by_id
         for key, value in entity.items():
             try:
-                entity[key] = eval(value)
+                entity[key] = literal_eval(value)
+                if entity[key].imag > 0 :
+                    entity[key] = str(value)
             except:
                 pass
+            
         return entity  
 
     def get_entity_ids_by_gnd(self):
