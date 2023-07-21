@@ -1,5 +1,5 @@
 from application.api.mylocal.models.entity import Entity
-from application.api.mylocal.models.ent_type import EntType
+from application.api.mylocal.helpers.ent_type import EntType
 from application.api.mylocal.models.geo_data import GeoData
 
 class EntityController:
