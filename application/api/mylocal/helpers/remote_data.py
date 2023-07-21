@@ -17,6 +17,10 @@ class RemoteData:
     
     def get_data(self):
         key = self.url.replace(ENTS_BASE_URL, '').replace(CENSUS_BASE_URL, '')
+        
+        if '/geo/json/' in key:
+            return self.data
+        
         data = Cache.get_data_from_cache(key)
         if data is None:
             data = self.data
