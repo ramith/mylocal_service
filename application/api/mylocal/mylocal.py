@@ -113,7 +113,6 @@ def _warmup():
 
     for entity_id in EntityController.get_entity_ids():
         try:
-            print(entity_id)
             EntityController.get_coordinates(entity_id)
         except:
             pass
