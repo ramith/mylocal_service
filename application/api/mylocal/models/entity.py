@@ -1,7 +1,7 @@
-from application.api.mylocal.models.ent_type import EntType
-from application.api.mylocal.models.remote_data import RemoteData
+from application.api.mylocal.helpers.ent_type import EntType
+from application.api.mylocal.helpers.remote_data import RemoteData
 from application.api.mylocal.models.geo_data import GeoData
-from application.api.mylocal.models.cache import Cache
+from application.api.mylocal.helpers.cache import Cache
 
 from shapely.geometry import shape
 from ast import literal_eval

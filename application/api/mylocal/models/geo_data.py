@@ -1,5 +1,5 @@
 from config import ENTS_BASE_URL
-from application.api.mylocal.models.remote_data import RemoteData
+from application.api.mylocal.helpers.remote_data import RemoteData
 
 class GeoData():
     data = None

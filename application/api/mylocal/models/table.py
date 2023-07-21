@@ -1,5 +1,5 @@
 from config import CENSUS_BASE_URL
-from application.api.mylocal.models.remote_data import RemoteData
+from application.api.mylocal.helpers.remote_data import RemoteData
 
 class Table:
     def __init__(self, table_name):

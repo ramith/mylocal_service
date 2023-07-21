@@ -1,6 +1,6 @@
 from utils import WWW
 from functools import cached_property
-from application.api.mylocal.models.cache import Cache
+from application.api.mylocal.helpers.cache import Cache
 
 
 class RemoteData:
