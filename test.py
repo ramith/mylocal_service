@@ -33,7 +33,7 @@ class MyLocalTestCase(unittest.TestCase):
 
     def test_entity_get_id(self):
         entity = Entity(coordinates=[6.9157, 79.8636], type='gnd')
-        result = entity.get_id()
+        result = entity.id
         expected_value = "LK-1127015"
         self.assertEqual(result, expected_value)
 
@@ -43,5 +43,4 @@ class MyLocalTestCase(unittest.TestCase):
         self.assertEqual(result, expected_value)
 
 if __name__ == '__main__':
-
     unittest.main()
