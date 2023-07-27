@@ -13,7 +13,7 @@ class Entity:
         if entity_id == '':
             self.coordinates = coordinates
             self.type = type
-            entity_id = self.get_id_by_coordinates
+            entity_id = self.__get_id_by_coordinates()
         self.entity_id = entity_id
 
     @property
@@ -25,68 +25,61 @@ class Entity:
         return self.coordinates
 
     @property
-    def get_entity_type(self):
+    def entity_type(self):
         return EntType.from_id(self.entity_id)
     
     @property
-    def get_ent_remote_data_path(self):
-        ent_type = self.get_entity_type.name
+    def ent_remote_data_path(self):
+        ent_type = self.entity_type.name
         return f'{ENTS_BASE_URL}/ents/{ent_type}.tsv'
     
     @property
-    def get_ent_remote_data(self):
-        return RemoteData(self.get_ent_remote_data_path, type='tsv').get_data()
+    def ent_remote_data(self):
+        return RemoteData(self.ent_remote_data_path, type='tsv').get_data()
     
     @property
-    def get_json_geo_remote_data_path(self):
-        ent_type = self.get_entity_type.name
+    def json_geo_remote_data_path(self):
+        ent_type = self.entity_type.name
         return f'{ENTS_BASE_URL}/geo/json/{ent_type}/{self.entity_id}.json'
 
     @property
-    def get_json_geo_remote_data(self):
-        return RemoteData(self.get_json_geo_remote_data_path, type='json').get_data()
+    def json_geo_remote_data(self):
+        return RemoteData(self.json_geo_remote_data_path, type='json').get_data()
     
-    @property
-    def get_entity_by_id(self):
-        data = self.get_ent_remote_data
+    def __get_entity_by_id(self):
+        data = self.ent_remote_data
         for d in data:
             if d['id'] == self.entity_id:
                 return d
         return None
 
-    @property
-    def get_id_by_coordinates(self):
+    def __get_id_by_coordinates(self):
         coordinates = self.coords
         point = shape({'type': 'Point', 'coordinates': [coordinates[1], coordinates[0]]} )
 
         processed_geo_data = Cache.get_data_from_cache('processed_geo_data')
 
         if processed_geo_data == None:
-            geo_data = {}
+            processed_geo_data = {}
             for id, geo in GeoData(type='gnd').get_geo_data().items():
-                geo_data[id] = shape(geo)
-            Cache.add_data_to_cache('processed_geo_data', geo_data)
-            processed_geo_data = geo_data
+                processed_geo_data[id] = shape(geo)
+            Cache.add_data_to_cache('processed_geo_data', processed_geo_data)
             
         for id,multi_polygon in processed_geo_data.items():
             if multi_polygon.contains(point):
                 return id
-            
         return None
     
     @property
-    def get_gnd_ent_remote_data_path(self):
+    def gnd_ent_remote_data_path(self):
         return f'{CENSUS_BASE_URL}/ents/gnd.tsv'
     
     @property
-    def get_gnd_ent_remote_data(self):
-        return RemoteData(self.get_gnd_ent_remote_data_path, type='tsv').get_data()
-
-    def get_id(self):
-        return self.id
+    def gnd_ent_remote_data(self):
+        return RemoteData(self.gnd_ent_remote_data_path, type='tsv').get_data()
 
     def get_entity(self):
-        entity = self.get_entity_by_id
+        entity = self.__get_entity_by_id()
         for key, value in entity.items():
             try:
                 entity[key] = literal_eval(value)
@@ -94,16 +87,15 @@ class Entity:
                     entity[key] = str(value)
             except:
                 pass
-            
         return entity  
 
     def get_entity_ids_by_gnd(self):
-        data = self.get_gnd_ent_remote_data
+        data = self.gnd_ent_remote_data
         for d in data:
             if d['id'] == self.id:
                 return d
         return None
 
     def get_coordinates(self):
-        return self.get_json_geo_remote_data
+        return self.json_geo_remote_data
     

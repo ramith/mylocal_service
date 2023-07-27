@@ -25,7 +25,7 @@ class EntityController:
         lat, _, lng = coordinates.partition(',')
         coordinates = [(float)(lat), (float)(lng)]
 
-        gnd_id = Entity(coordinates=coordinates, type='gnd').get_id()
+        gnd_id = Entity(coordinates=coordinates, type='gnd').id
         return EntityController.get_entities_ids_by_gnd(gnd_id)
 
     @classmethod

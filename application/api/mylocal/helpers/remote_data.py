@@ -1,5 +1,6 @@
 from utils import WWW
 from functools import cached_property
+import geopandas
 from application.api.mylocal.helpers.cache import Cache
 from config import ENTS_BASE_URL, CENSUS_BASE_URL
 
@@ -14,11 +15,13 @@ class RemoteData:
             return WWW(self.url).readTSV()
         if self.type == 'json':
             return WWW(self.url).readJSON()
-    
+        if self.type == 'topojson':
+            return geopandas.read_file(WWW(self.url).download())
+
     def get_data(self):
         key = self.url.replace(ENTS_BASE_URL, '').replace(CENSUS_BASE_URL, '')
         
-        if '/geo/json/' in key:
+        if '/geo/json/' or 'topojson' in key:
             return self.data
         
         data = Cache.get_data_from_cache(key)

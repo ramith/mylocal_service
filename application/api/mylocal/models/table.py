@@ -4,18 +4,15 @@ from application.api.mylocal.helpers.remote_data import RemoteData
 class Table:
     def __init__(self, table_name):
         self.table_name = table_name
-
-    def get_table_name(self):
-        return self.table_name
     
     @property
-    def get_remote_data_path(self):
-        return f'{CENSUS_BASE_URL}/gig2/{self.get_table_name()}.tsv'
+    def __remote_data_path(self):
+        return f'{CENSUS_BASE_URL}/gig2/{self.table_name}.tsv'
     
     @property
-    def get_remote_data(self):
-        return RemoteData(self.get_remote_data_path, type='tsv').get_data()
+    def __remote_data(self):
+        return RemoteData(self.__remote_data_path, type='tsv').get_data()
     
     def get_table(self):
-        return self.get_remote_data
+        return self.__remote_data
     

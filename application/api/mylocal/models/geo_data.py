@@ -1,42 +1,32 @@
 from config import ENTS_BASE_URL
 from application.api.mylocal.helpers.remote_data import RemoteData
+from shapely.geometry import mapping
 
 class GeoData():
-    data = None
-
     def __init__(self, type):
         self.type = type
 
     @property
-    def get_topojson_geo_remote_data_path(self):
+    def __remote_data_path(self):
         ent_type = self.type
         return f'{ENTS_BASE_URL}/geo/topo-geo_json/{ent_type}.topojson'
 
     @property
-    def get_topojson_geo_remote_data(self):
-        return RemoteData(self.get_topojson_geo_remote_data_path, type='json').get_data()
+    def __remote_data(self):
+        return RemoteData(self.__remote_data_path, type='topojson').get_data()
 
     @property
-    def get_geo(self):
-        geo_data = self.get_topojson_geo_remote_data
+    def __geo(self):
+        geo_data = self.__remote_data
+        n_regions = len(geo_data['geometry'])
         region_to_geo = {}
-        for geometry in geo_data['objects']['data']['geometries']:
-            coordinates = []
-            region_id = geometry['properties']['id']
-
-            for arc in geometry['arcs']:
-                arc = arc.pop().pop()
-                coordinates.append(geo_data['arcs'][arc])
-
-            region_to_geo[region_id] = {'type': 'multipolygon', 'coordinates': [coordinates]}
+        for i in range(0, n_regions):
+            region_id = geo_data['id'][i]
+            region_to_geo[region_id] = mapping(geo_data['geometry'][i])
         return region_to_geo
 
     def get_geo_data(self):
-        if GeoData.data is None:
-            GeoData.data = self.get_geo
-        return GeoData.data
+        return self.__geo
     
     def get_entity_ids(self):
-        if GeoData.data is None:
-            GeoData.data = self.get_geo
-        return list(GeoData.data.keys())
+        return list(self.__geo.keys())
