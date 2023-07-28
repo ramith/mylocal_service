@@ -33,10 +33,10 @@ spec:
           resources:
             limits:
               cpu: 800m
-              memory: 750Mi
+              memory: 850Mi
             requests:
               cpu: 800m
-              memory: 750Mi
+              memory: 850Mi
           volumeMounts:
           - name: mylocalservice-env
             mountPath: /mylocal_service/.env
