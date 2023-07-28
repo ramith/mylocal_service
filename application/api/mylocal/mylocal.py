@@ -85,7 +85,7 @@ def _warmup():
     """Warmup function."""
     print('Warming up mylocal service...')
     
-    EntityController.get_entities('LK-1127015;LK-11;LK-1;LK-1127;EC-01;EC-01C;LG-11031;MOH-11031')
+    EntityController.get_entities('LK;LK-1127015;LK-11;LK-1;LK-1127;EC-01;EC-01C;LG-11031;MOH-11031')
     TableController('population-gender.regions.2012').get_table_row('LK-1127015')
     TableController('population-age_group.regions.2012').get_table_row('LK-1127015')
     TableController('population-marital_status.regions.2012').get_table_row('LK-1127015')
