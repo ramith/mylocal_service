@@ -20,8 +20,8 @@ class RemoteData:
 
     def get_data(self):
         key = self.url.replace(ENTS_BASE_URL, '').replace(CENSUS_BASE_URL, '')
-        
-        if '/geo/json/' or 'topojson' in key:
+
+        if '/geo/json/' in key or 'topojson' in key :
             return self.data
         
         data = Cache.get_data_from_cache(key)
