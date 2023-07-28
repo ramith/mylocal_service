@@ -110,7 +110,7 @@ def _warmup():
     TableController('social-household-number-of-households.regions.2012').get_table_row('LK-1127015')
     TableController('social-household-ownership-status.regions.2012').get_table_row('LK-1127015')
     EntityController.get_entity_ids_by_coordinates('6.9157,79.8636')
-
+    log.debug("Warming up entity coordinates...")
     for entity_id in EntityController.get_entity_ids():
         try:
             EntityController.get_coordinates(entity_id)
