@@ -1,0 +1,1 @@
+web: python mylocal_service.py
