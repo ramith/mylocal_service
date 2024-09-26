@@ -115,6 +115,7 @@ def _warmup():
         try:
             EntityController.get_coordinates(entity_id)
         except:
+            log.debug("Passing ---")
             pass
 
     print('mylocal service warmup complete.!')
