@@ -18,7 +18,7 @@ COPY mylocal_service.py .
 COPY config.py .
 COPY application /mylocal_service/application
 # Expose a port for the API to listen on
-EXPOSE 4000
+EXPOSE 9000
 
 # Run the Python API
 CMD ["python", "mylocal_service.py"]

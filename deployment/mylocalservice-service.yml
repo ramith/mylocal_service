@@ -9,7 +9,7 @@ spec:
   ports:
     - name: port-80
       port: 80
-      targetPort: 4000
+      targetPort: 9000
   selector:
     app_name: mylocalservice
   type: ClusterIP
