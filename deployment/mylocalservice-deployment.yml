@@ -27,8 +27,8 @@ spec:
           imagePullPolicy: Always
           name: mylocalservice
           ports:
-            - containerPort: 4000
-              name: port-4000
+            - containerPort: 9000
+              name: port-9000
               protocol: TCP
           resources:
             limits:

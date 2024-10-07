@@ -1,0 +1,10 @@
+apiVersion: core.choreo.dev/v1beta1
+kind: ComponentConfig
+spec:
+  inbound:
+    - name: myLocal
+      port: 9000
+      type: REST
+      networkVisibility: Public
+      context: /
+      # schemaFilePath: Not required since there is no OpenAPI spec

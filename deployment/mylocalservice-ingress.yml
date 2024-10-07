@@ -28,7 +28,7 @@ spec:
               service:
                 name: mylocalservice
                 port:
-                  number: 4000
+                  number: 9000
             path: /
             pathType: Prefix
   tls:
