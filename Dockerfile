@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install libgl1 libglib2.0-0 -y
 
 # Install the Python dependencies
 RUN pip install -r requirements.txt
-RUN addgroup -g 10014 choreo && \
-    adduser  --disabled-password  --no-create-home --uid 10014 --ingroup choreo choreouser
+RUN addgroup --gid 10014 choreo && \
+    adduser --disabled-password --no-create-home --uid 10014 --ingroup choreo choreouser
 
 # Copy files to the container
 COPY mylocal_service.py .
