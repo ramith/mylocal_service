@@ -3,6 +3,8 @@ import json
 from utils.Log import Log
 from application.api.mylocal.controllers.entity_controller import EntityController
 from application.api.mylocal.controllers.table_controller import TableController
+from concurrent.futures import ThreadPoolExecutor
+
 bp = Blueprint('mylocal', __name__)
 log = Log('mylocal')
 
@@ -85,37 +87,66 @@ def _warmup():
     """Warmup function."""
     print('Warming up mylocal service...')
     
+    # Execute EntityController.get_entities outside of parallel execution
     EntityController.get_entities('LK;LK-1127015;LK-11;LK-1;LK-1127;EC-01;EC-01C;LG-11031;MOH-11031')
-    TableController('population-gender.regions.2012').get_table_row('LK-1127015')
-    TableController('population-age_group.regions.2012').get_table_row('LK-1127015')
-    TableController('population-marital_status.regions.2012').get_table_row('LK-1127015')
-    TableController('population-ethnicity.regions.2012').get_table_row('LK-1127015')
-    TableController('population-religion.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-lighting.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-cooking_fuel.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-source_of_drinking_water.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-solid_waste_disposal.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-toilet_facilities.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-roof_type.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-floor_type.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-wall_type.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-structure.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-living_quarters.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-type_of_unit.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-occupation_status.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-year_of_construction.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-number_of_rooms.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-number_of_persons.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-relationship_to_head.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-number-of-households.regions.2012').get_table_row('LK-1127015')
-    TableController('social-household-ownership-status.regions.2012').get_table_row('LK-1127015')
+    
+    with ThreadPoolExecutor() as executor:
+        futures = []
+        
+        # List of table names to be processed in parallel
+        table_names = [
+            'population-gender.regions.2012',
+            'population-age_group.regions.2012',
+            'population-marital_status.regions.2012',
+            'population-ethnicity.regions.2012',
+            'population-religion.regions.2012',
+            'social-household-lighting.regions.2012',
+            'social-household-cooking_fuel.regions.2012',
+            'social-household-source_of_drinking_water.regions.2012',
+            'social-household-solid_waste_disposal.regions.2012',
+            'social-household-toilet_facilities.regions.2012',
+            'social-household-roof_type.regions.2012',
+            'social-household-floor_type.regions.2012',
+            'social-household-wall_type.regions.2012',
+            'social-household-structure.regions.2012',
+            'social-household-living_quarters.regions.2012',
+            'social-household-type_of_unit.regions.2012',
+            'social-household-occupation_status.regions.2012',
+            'social-household-year_of_construction.regions.2012',
+            'social-household-number_of_rooms.regions.2012',
+            'social-household-number_of_persons.regions.2012',
+            'social-household-relationship_to_head.regions.2012',
+            'social-household-number-of-households.regions.2012',
+            'social-household-ownership-status.regions.2012'
+        ]
+        
+        # Submit TableController tasks to the executor
+        for table_name in table_names:
+            futures.append(executor.submit(TableController(table_name).get_table_row, 'LK-1127015'))
+        
+        # Wait for all TableController futures to complete
+        for future in futures:
+            try:
+                future.result()
+            except Exception as e:
+                log.debug(f"Exception occurred: {e}")
+
+    # Execute EntityController.get_entity_ids_by_coordinates outside of parallel execution
     EntityController.get_entity_ids_by_coordinates('6.9157,79.8636')
-    log.debug("Warming up entity coordinates...")
-    for entity_id in EntityController.get_entity_ids():
-        try:
-            EntityController.get_coordinates(entity_id)
-        except:
-            log.debug("Passing ---")
-            pass
+    
+    log.debug("Warming up entity coordinates in parallel...")
+    
+    # Run EntityController.get_coordinates in parallel
+    with ThreadPoolExecutor() as executor:
+        futures = []
+        for entity_id in EntityController.get_entity_ids():
+            futures.append(executor.submit(EntityController.get_coordinates, entity_id))
+        
+        # Wait for all EntityController.get_coordinates futures to complete
+        for future in futures:
+            try:
+                future.result()
+            except Exception as e:
+                log.debug(f"Exception occurred: {e}")
 
     print('mylocal service warmup complete.!')
